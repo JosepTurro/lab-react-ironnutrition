@@ -3,30 +3,51 @@ import './App.css';
 import foods from './foods.json';
 import { useState } from 'react';
 import FoodBox from './components/FoodBox';
+import { Row, Divider, Button } from 'antd';
+import AddFoodForm from './components/AddFoodForm';
 
 
 
 function App() {
 
    const [foodLst, setFoodLst]= useState(foods)
+   
+   const deleteFood = (foodName)=>{
+    const foodArray = foodLst.filter(menjare =>{
+        return menjare.name != foodName;
+    })
+    setFoodLst(foodArray)
+   }
+
+   const addFoodHandler = (food) => {
+    const foodsMod = [...foodLst, food]; //copian
+    setFoodLst(foodsMod);
+  }
+
+  
+
 
   return (
+    
+
+
     <div className="App">
-      <h1>Food List</h1>
-      {foodLst.map((menjar)=>{
+      <AddFoodForm addFoodHandler={addFoodHandler} />
+
+      <Button> Hide Form / Add New Food </Button>  
+
+      {/* Display Search component here */}
+
+      <Divider>Food List</Divider>
+
+      <Row style={{ width: '100%', justifyContent: 'center' }}>
+        {foodLst.map((menjar)=>{
         
-        return(<div>
-          <p>{menjar.name}</p>
-          <img src= {menjar.image} width={120} />
-        </div>) ;
+        return(
+          <FoodBox key={menjar.name} food={menjar} deleteHandlerProps={deleteFood} />
+        ) ;
       })}
-      <FoodBox food={ {
-        name: "Orange",
-        calories: 85,
-        image: "https://i.imgur.com/abKGOcv.jpg",
-        servings: 1
-      }} />
-      
+      </Row>
     </div>
   );
 }
